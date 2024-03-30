@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Inventario.Controllers
 {
@@ -84,9 +85,9 @@ namespace Inventario.Controllers
 
         [HttpGet]
         [Route("Filtrar/Celular")]
-        public async Task<ActionResult> FiltarPorCelular(int celular)
+        public async Task<ActionResult> FiltarPorCelular(string celular)
         {
-            Cliente cliente = await _context.Clientes.FindAsync(celular);
+            var cliente = await _context.Clientes.Where(c => c.Celular == celular).ToListAsync();
 
             if (cliente == null)
             {
@@ -100,9 +101,9 @@ namespace Inventario.Controllers
 
         [HttpGet]
         [Route("Filtrar/Correo")]
-        public async Task<ActionResult> FiltarPorCorreo(int correo)
+        public async Task<ActionResult> FiltarPorCorreo(string correo)
         {
-            Cliente cliente = await _context.Clientes.FindAsync(correo);
+            var cliente = await _context.Clientes.Where(c => c.Correo == correo).ToListAsync(); ;
 
             if (cliente == null)
             {

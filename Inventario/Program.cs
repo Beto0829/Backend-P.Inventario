@@ -37,11 +37,17 @@ namespace Inventario
 
             app.UseAuthorization();
 
+            app.UseRouting();
+
+            // Configuracion CORS
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
 
             app.MapControllers();
-
-            //habilitar credenciales
-            app.UseCors("http://localhost:5173");
 
             app.Run();
         }

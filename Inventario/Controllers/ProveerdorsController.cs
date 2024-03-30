@@ -84,9 +84,9 @@ namespace Inventario.Controllers
 
         [HttpGet]
         [Route("Filtrar/Celular")]
-        public async Task<ActionResult> FiltarPorCelular(int celular)
+        public async Task<ActionResult> FiltarPorCelular(string celular)
         {
-            Proveedor proveedor = await _context.Proveedors.FindAsync(celular);
+            var proveedor = await _context.Proveedors.Where(p => p.Celular == celular).ToListAsync();
 
             if (proveedor == null)
             {
@@ -100,9 +100,9 @@ namespace Inventario.Controllers
 
         [HttpGet]
         [Route("Filtrar/Correo")]
-        public async Task<ActionResult> FiltarPorCorreo(int correo)
+        public async Task<ActionResult> FiltarPorCorreo(string correo)
         {
-            Proveedor proveedor = await _context.Proveedors.FindAsync(correo);
+            var proveedor = await _context.Proveedors.Where(p => p.Correo == correo).ToListAsync();
 
             if (proveedor == null)
             {
