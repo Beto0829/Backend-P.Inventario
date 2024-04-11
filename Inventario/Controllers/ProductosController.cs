@@ -35,7 +35,16 @@ namespace Inventario.Controllers
         [Route("Consultar")]
         public async Task<ActionResult<IEnumerable<Producto>>> Consultar()
         {
-            var productos = await _context.Productos.ToListAsync();
+            var productos = await _context.Productos
+                        .Include(p => p.Categoria)
+                        .Select(p => new {
+                            p.Id,
+                            p.Nombre,
+                            p.Descripcion,
+                            p.IdCategoria,
+                            NombreCategoria = p.Categoria.Nombre
+                        })
+                        .ToListAsync();
 
             if (productos == null || productos.Count == 0)
             {

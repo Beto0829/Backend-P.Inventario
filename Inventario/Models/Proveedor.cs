@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Inventario.Models
 {
@@ -14,5 +15,8 @@ namespace Inventario.Models
 
         [MaxLength(255, ErrorMessage = "El campo {0} debe tener maximo {1} caracteres.")]
         public required string Correo { get; set; }
+
+        [JsonIgnore]
+        public List<Entrada>? Compras { get; set; }
     }
 }

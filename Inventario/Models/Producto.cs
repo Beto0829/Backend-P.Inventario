@@ -18,5 +18,8 @@ namespace Inventario.Models
 
         [JsonIgnore]
         public Categoria? Categoria { get; set; }
+
+        [JsonIgnore]
+        public List<Entrada>? Compras { get; set; }
     }
 }

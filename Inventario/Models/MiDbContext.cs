@@ -10,6 +10,7 @@ namespace Inventario.Models
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Proveedor> Proveedors { get; set; }
+        public DbSet<Entrada> Entradas { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -17,9 +18,9 @@ namespace Inventario.Models
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Producto>()
-                .HasOne(p => p.Categoria)            // Una nota tiene una categoría
-                .WithMany(c => c.Productos)          // Una categoría puede tener varias notas
-                .HasForeignKey(p => p.IdCategoria)   // La clave foránea en Nota apunta a IdCategoria
+                .HasOne(p => p.Categoria)            // Un producto tiene una categoría
+                .WithMany(c => c.Productos)          // Una categoría puede tener varios productos
+                .HasForeignKey(p => p.IdCategoria)   // La clave foránea en productos apunta a IdCategoria
                 .IsRequired();
 
             modelBuilder.Entity<Cliente>()
@@ -41,6 +42,27 @@ namespace Inventario.Models
             modelBuilder.Entity<Categoria>()
                .HasIndex(c => c.Nombre)
                .IsUnique();
+
+            //relaciones del modelo entradas, aca abajo
+
+            modelBuilder.Entity<Entrada>()
+                .HasOne(e => e.Categoria)            // Una compra tiene una categoría
+                .WithMany(cat => cat.Compras)        // Una categoría puede tener varias compras
+                .HasForeignKey(e => e.IdCategoria)   // La clave foránea en compras apunta a IdCategoria
+                .IsRequired();
+
+            modelBuilder.Entity<Entrada>()
+               .HasOne(e => e.Producto)            // Una compra tiene un producto
+               .WithMany(p => p.Compras)           // Un producto puede tener varias compras
+               .HasForeignKey(e => e.IdProducto)   // La clave foránea en compras apunta a IdProducto
+               .IsRequired();
+
+            modelBuilder.Entity<Entrada>()
+              .HasOne(e => e.proveedor)            // Una compra tiene un proveedor
+              .WithMany(p => p.Compras)            // Un proveedor puede tener varias compras
+              .HasForeignKey(e => e.IdProveedor)   // La clave foránea en compras apunta a IdProveedor
+              .IsRequired();
+
 
             modelBuilder.Entity<Categoria>().HasData(new Categoria { Id = 1, Nombre = "Sin categoria" });
         }

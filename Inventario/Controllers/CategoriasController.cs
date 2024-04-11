@@ -105,17 +105,31 @@ namespace Inventario.Controllers
 
             if (categoriaEliminar == null)
             {
-                return NotFound("No existes el dato que buscas");
+                return NotFound("No existe la categoria que buscas");
             }
-            else
+
+            var productosEnCategoria = await _context.Productos
+                                                .Where(p => p.IdCategoria == id)
+                                                .ToListAsync();
+
+            if (productosEnCategoria.Any())
             {
-                _context.Categorias.Remove(categoriaEliminar!);
+                var categoriaNueva = await _context.Categorias.FindAsync(1);
 
-                await _context.SaveChangesAsync();
-
-                return Ok("Se elimino exitosamente");
+                if (categoriaNueva != null)
+                {
+                    foreach (var producto in productosEnCategoria)
+                    {
+                        producto.IdCategoria = categoriaNueva.Id;
+                    }
+                }
             }
-            
+
+            _context.Categorias.Remove(categoriaEliminar);
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Se elimino exitosamente la categoria");
         }
 
     }
