@@ -11,6 +11,7 @@ namespace Inventario.Models
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Proveedor> Proveedors { get; set; }
         public DbSet<Entrada> Entradas { get; set; }
+        public DbSet<ProductoSalida> ProductoSalida { get; set; }
         public DbSet<Salida> Salidas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

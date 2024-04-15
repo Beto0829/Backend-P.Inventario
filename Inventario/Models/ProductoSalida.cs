@@ -5,6 +5,8 @@ namespace Inventario.Models
 {
     public class ProductoSalida
     {
+        public int Id { get; set; }
+
         public int IdEntrada { get; set; }
 
         [JsonIgnore]
