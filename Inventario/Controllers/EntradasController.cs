@@ -85,8 +85,8 @@ namespace Inventario.Controllers
                             p.PrecioCompra,
                             p.PrecioVenta,
                             p.Nota,
-                            //FechaEntrada = p.FechaEntrada.ToString("dd/MM/yy")
-                            p.FechaEntrada
+                            FechaEntrada = p.FechaEntrada.ToString("dd/MM/yy HH:mm")
+                            //p.FechaEntrada
                         })
                         .ToListAsync();
 
