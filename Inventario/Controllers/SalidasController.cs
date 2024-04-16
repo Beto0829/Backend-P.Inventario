@@ -15,35 +15,63 @@ namespace Inventario.Controllers
         {
             _context = context;
         }
+
         [HttpPost]
         [Route("Agregar")]
-        public async Task<ActionResult<Salida>> CreateSalida(Salida salida)
+        public async Task<ActionResult<Salida>> AgregarSalida(Salida salida)
         {
-            // Verifica si los productos especificados en la salida están disponibles en las entradas previas
-            foreach (var productoSalida in salida.ProductoSalidas)
+            try
             {
-                var entrada = await _context.Entradas.FindAsync(productoSalida.IdEntrada);
-                if (entrada == null)
+                DateTime fechaHoraActual = DateTime.Now;
+
+                salida.FechaFactura = new DateTime(fechaHoraActual.Year, fechaHoraActual.Month, fechaHoraActual.Day, fechaHoraActual.Hour, fechaHoraActual.Minute, 0);
+
+                _context.Salidas.Add(salida);
+                await _context.SaveChangesAsync();
+
+                int nuevaSalidaId = salida.Id;
+
+                if (salida.ProductoSalidas != null && salida.ProductoSalidas.Any())
                 {
-                    return BadRequest($"El producto con ID {productoSalida.IdProducto} no existe en las entradas.");
+                    foreach (var productoSalida in salida.ProductoSalidas)
+                    {
+                        productoSalida.IdSalida = nuevaSalidaId;
+                        _context.ProductoSalidas.Add(productoSalida);
+                    }
+                    await _context.SaveChangesAsync();
                 }
 
-                // Llena automáticamente los datos de ProductoSalida con los datos de la entrada
-                productoSalida.IdCategoria = entrada.IdCategoria;
-                productoSalida.IdProducto = entrada.IdProducto;
-                productoSalida.FechaEntrada = entrada.FechaEntrada;
-                productoSalida.PrecioVentaSalida = entrada.PrecioVenta;
-
-                // Asigna la entrada al ProductoSalida
-                productoSalida.Entrada = entrada;
+                return Ok(salida);
             }
-
-            // Agrega la nueva salida a la base de datos
-            _context.Salidas.Add(salida);
-            await _context.SaveChangesAsync();
-
-            return Ok("Se guardó exitosamente");
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al agregar la salida: " + ex.Message);
+            }
         }
+
+        [HttpGet]
+        [Route("ConsultarTodo")]
+        public async Task<ActionResult<IEnumerable<Salida>>> ConsultarSalidas()
+        {
+            try
+            {
+                var salidas = await _context.Salidas
+                    .Include(s => s.ProductoSalidas)
+                    .ToListAsync();
+
+                if (salidas == null || salidas.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(salidas);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al consultar las salidas: " + ex.Message);
+            }
+        }
+
 
     }
 }

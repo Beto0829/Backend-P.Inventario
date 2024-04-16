@@ -15,5 +15,8 @@ namespace Inventario.Models
 
         [MaxLength(255, ErrorMessage = "El campo {0} debe tener maximo {1} caracteres.")]
         public required string Correo { get; set; }
+
+        [JsonIgnore]
+        public List<Salida>? Salidas { get; set; }
     }
 }

@@ -52,6 +52,24 @@ namespace Inventario.Controllers
         }
 
         [HttpGet]
+        [Route("TarjetaCategorias")]
+        public async Task<ActionResult<int>> ConsultarCategorias()
+        {
+            var categorias = await _context.Categorias.ToListAsync();
+            int tarjetaCategorias = categorias.Count;
+
+            if (categorias == null || tarjetaCategorias == 0)
+            {
+                return NotFound("No existen los datos que buscas");
+            }
+            else
+            {
+                return Ok(tarjetaCategorias);
+            }
+        }
+
+
+        [HttpGet]
         [Route("TarjetaProductos")]
         public async Task<ActionResult<int>> ConsultarProductos()
         {
@@ -68,7 +86,22 @@ namespace Inventario.Controllers
             }
         }
 
-        ///Falta factura
+        [HttpGet]
+        [Route("TarjetaFacturas")]
+        public async Task<ActionResult<int>> ConsultarFacturas()
+        {
+            var facturas = await _context.Salidas.ToListAsync();
+            int tarjetafactura = facturas.Count;
+
+            if (facturas == null || tarjetafactura == 0)
+            {
+                return NotFound("No existen los datos que buscas");
+            }
+            else
+            {
+                return Ok(tarjetafactura);
+            }
+        }
 
         [HttpGet]
         [Route("TarjetaExistenciasTotales")]
@@ -87,7 +120,22 @@ namespace Inventario.Controllers
             }
         }
 
-        //Falta Existencias vendidas
+        [HttpGet]
+        [Route("TarjetaExistenciasVendidas")]
+        public async Task<ActionResult<int>> ConsultarExistenciasVendidas()
+        {
+            var existencias = await _context.ProductoSalidas.ToListAsync();
+
+            if (existencias == null || !existencias.Any())
+            {
+                return NotFound("No existen los datos que buscas");
+            }
+            else
+            {
+                int sumaExistenciaVendidas = existencias.Sum(e => e.Cantidad);
+                return Ok(sumaExistenciaVendidas);
+            }
+        }
 
         [HttpGet]
         [Route("TarjetaExistenciasActuales")]
@@ -106,15 +154,97 @@ namespace Inventario.Controllers
             }
         }
 
-        //Falta importe vendido
+        [HttpGet]
+        [Route("TarjetaImporteVendido")]
+        public async Task<ActionResult<decimal>> ConsultarImporteVendido()
+        {
+            var importes = await _context.Salidas.ToListAsync();
 
-        //Falta importe pagado
+            if (importes == null || !importes.Any())
+            {
+                return NotFound("No existen los datos que buscas");
+            }
+            else
+            {
+                decimal sumaImporteVendido = importes.Sum(e => e.TotalPagarSinDescuento);
+                return Ok(sumaImporteVendido);
+            }
+        }
 
-        //Falta importe restante
+        [HttpGet]
+        [Route("TarjetaImportePagado")]
+        public async Task<ActionResult<decimal>> ConsultarImportePagado()
+        {
+            var importes = await _context.Salidas.ToListAsync();
 
-        //Falta beneficio bruto
+            if (importes == null || !importes.Any())
+            {
+                return NotFound("No existen los datos que buscas");
+            }
+            else
+            {
+                decimal sumaImporteVendido = importes.Sum(e => e.TotalPagarConDescuento);
+                return Ok(sumaImporteVendido);
+            }
+        }
 
-        //Falta beneficio Neto
+        [HttpGet]
+        [Route("TarjetaBeneficioBruto")]
+        public async Task<ActionResult<decimal>> ConsultarBeneficioBruto()
+        {
+            try
+            {
+                var salidas = await _context.Salidas
+                    .Include(s => s.ProductoSalidas) 
+                    .ToListAsync();
 
+                if (salidas == null || !salidas.Any())
+                {
+                    return NotFound("No existen los datos que buscas");
+                }
+
+                decimal ingresosTotales = salidas.Sum(s => s.TotalPagarConDescuento);
+
+                decimal costoBienesVendidos = await _context.Entradas.SumAsync(e => e.PrecioCompra * (e.ExistenciaInicial - e.ExistenciaActual));
+
+                decimal beneficioBruto = ingresosTotales - costoBienesVendidos;
+
+                return Ok(beneficioBruto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al calcular el beneficio bruto: " + ex.Message);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("TarjetaBeneficioNeto")]
+        public async Task<ActionResult<decimal>> ConsultarBeneficioNeto()
+        {
+            try
+            {
+                var salidas = await _context.Salidas
+                    .Include(s => s.ProductoSalidas)
+                    .ToListAsync();
+
+                if (salidas == null || !salidas.Any())
+                {
+                    return NotFound("No existen los datos que buscas");
+                }
+
+                decimal ingresosTotales = salidas.Sum(s => s.TotalPagarConDescuento);
+
+                decimal costosTotales = await _context.Entradas.SumAsync(e => e.PrecioCompra * (e.ExistenciaInicial - e.ExistenciaActual));
+
+                decimal beneficioNeto = ingresosTotales - costosTotales;
+
+                return Ok(beneficioNeto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al calcular el beneficio neto: " + ex.Message);
+            }
+        }
     }
 }

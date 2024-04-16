@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace Inventario.Models
@@ -7,32 +8,27 @@ namespace Inventario.Models
     {
         public int Id { get; set; }
 
-        public int IdEntrada { get; set; }
+        public int IdSalida { get; set; }
 
-        [JsonIgnore]
         public int IdCategoria { get; set; }
 
-        [JsonIgnore]
         public int IdProducto { get; set; }
 
-        [JsonIgnore]
-        public DateTime FechaEntrada { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Precio { get; set; }
 
         public int Cantidad { get; set; }
-
-        [JsonIgnore]
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal PrecioVentaSalida { get; set; }
-
-        public bool TipoDescuento { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Descuento { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal TotalDescuento { get; set; }
+        public decimal ValorDescuento { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Total { get; set; }
 
         [JsonIgnore]
-        public Entrada? Entrada { get; set; }
+        public Salida? Salida { get; set; }
     }
 }

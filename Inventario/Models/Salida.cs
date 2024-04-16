@@ -9,10 +9,21 @@ namespace Inventario.Models
     {
         public int Id { get; set; }
 
-        public int IdCliente { get; set; }
-
         [JsonIgnore]
         public DateTime FechaFactura { get; set; }
+
+        public int IdCliente { get; set; }
+
+        public int CantidadProductos { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TotalPagarConDescuento { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TotalPagarSinDescuento { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TotalDescuento { get; set; }
 
         public List<ProductoSalida>? ProductoSalidas { get; set; }
 
