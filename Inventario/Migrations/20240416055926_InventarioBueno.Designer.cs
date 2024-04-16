@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventario.Migrations
 {
     [DbContext(typeof(MiDbContext))]
-    [Migration("20240416032707_Inventario")]
-    partial class Inventario
+    [Migration("20240416055926_InventarioBueno")]
+    partial class InventarioBueno
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -182,7 +182,7 @@ namespace Inventario.Migrations
                             Id = 1,
                             ExistenciaActual = 30,
                             ExistenciaInicial = 50,
-                            FechaEntrada = new DateTime(2024, 4, 15, 22, 27, 6, 174, DateTimeKind.Local).AddTicks(7141),
+                            FechaEntrada = new DateTime(2024, 4, 16, 0, 59, 24, 194, DateTimeKind.Local).AddTicks(6159),
                             IdCategoria = 3,
                             IdProducto = 3,
                             IdProveedor = 3,
@@ -195,7 +195,7 @@ namespace Inventario.Migrations
                             Id = 2,
                             ExistenciaActual = 80,
                             ExistenciaInicial = 200,
-                            FechaEntrada = new DateTime(2024, 4, 15, 22, 27, 6, 174, DateTimeKind.Local).AddTicks(7186),
+                            FechaEntrada = new DateTime(2024, 4, 16, 0, 59, 24, 194, DateTimeKind.Local).AddTicks(6233),
                             IdCategoria = 5,
                             IdProducto = 7,
                             IdProveedor = 1,
@@ -208,7 +208,7 @@ namespace Inventario.Migrations
                             Id = 3,
                             ExistenciaActual = 40,
                             ExistenciaInicial = 60,
-                            FechaEntrada = new DateTime(2024, 4, 15, 22, 27, 6, 174, DateTimeKind.Local).AddTicks(7215),
+                            FechaEntrada = new DateTime(2024, 4, 16, 0, 59, 24, 194, DateTimeKind.Local).AddTicks(6270),
                             IdCategoria = 2,
                             IdProducto = 8,
                             IdProveedor = 4,
@@ -351,6 +351,10 @@ namespace Inventario.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IdCategoria");
+
+                    b.HasIndex("IdProducto");
 
                     b.HasIndex("IdSalida");
 
@@ -520,7 +524,7 @@ namespace Inventario.Migrations
                         {
                             Id = 1,
                             CantidadProductos = 2,
-                            FechaFactura = new DateTime(2024, 4, 15, 22, 27, 0, 0, DateTimeKind.Unspecified),
+                            FechaFactura = new DateTime(2024, 4, 16, 0, 59, 0, 0, DateTimeKind.Unspecified),
                             IdCliente = 3,
                             TotalDescuento = 26000m,
                             TotalPagarConDescuento = 274000m,
@@ -530,7 +534,7 @@ namespace Inventario.Migrations
                         {
                             Id = 2,
                             CantidadProductos = 1,
-                            FechaFactura = new DateTime(2024, 4, 15, 22, 27, 0, 0, DateTimeKind.Unspecified),
+                            FechaFactura = new DateTime(2024, 4, 16, 0, 59, 0, 0, DateTimeKind.Unspecified),
                             IdCliente = 1,
                             TotalDescuento = 190000m,
                             TotalPagarConDescuento = 3610000m,
@@ -540,7 +544,7 @@ namespace Inventario.Migrations
                         {
                             Id = 3,
                             CantidadProductos = 2,
-                            FechaFactura = new DateTime(2024, 4, 15, 22, 27, 0, 0, DateTimeKind.Unspecified),
+                            FechaFactura = new DateTime(2024, 4, 16, 0, 59, 0, 0, DateTimeKind.Unspecified),
                             IdCliente = 2,
                             TotalDescuento = 7040m,
                             TotalPagarConDescuento = 164960m,
@@ -588,11 +592,27 @@ namespace Inventario.Migrations
 
             modelBuilder.Entity("Inventario.Models.ProductoSalida", b =>
                 {
+                    b.HasOne("Inventario.Models.Categoria", "Categoria")
+                        .WithMany("ProductoSalidas")
+                        .HasForeignKey("IdCategoria")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Inventario.Models.Producto", "Producto")
+                        .WithMany("ProductoSalidas")
+                        .HasForeignKey("IdProducto")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Inventario.Models.Salida", "Salida")
                         .WithMany("ProductoSalidas")
                         .HasForeignKey("IdSalida")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Categoria");
+
+                    b.Navigation("Producto");
 
                     b.Navigation("Salida");
                 });
@@ -612,6 +632,8 @@ namespace Inventario.Migrations
                 {
                     b.Navigation("Compras");
 
+                    b.Navigation("ProductoSalidas");
+
                     b.Navigation("Productos");
                 });
 
@@ -623,6 +645,8 @@ namespace Inventario.Migrations
             modelBuilder.Entity("Inventario.Models.Producto", b =>
                 {
                     b.Navigation("Compras");
+
+                    b.Navigation("ProductoSalidas");
                 });
 
             modelBuilder.Entity("Inventario.Models.Proveedor", b =>

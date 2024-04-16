@@ -78,6 +78,18 @@ namespace Inventario.Models
                 .HasForeignKey(ps => ps.IdCliente)  // La clave foránea en compras apunta a IdEntrada
                 .IsRequired();
 
+            modelBuilder.Entity<ProductoSalida>()
+               .HasOne(p => p.Categoria)            
+               .WithMany(c => c.ProductoSalidas)         
+               .HasForeignKey(p => p.IdCategoria)  
+               .IsRequired();
+
+            modelBuilder.Entity<ProductoSalida>()
+              .HasOne(ps => ps.Producto)            
+              .WithMany(p => p.ProductoSalidas)          
+              .HasForeignKey(ps => ps.IdProducto)   
+              .IsRequired();
+
 
 
             //Insertar datos cateoria

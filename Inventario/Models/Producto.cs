@@ -21,5 +21,8 @@ namespace Inventario.Models
 
         [JsonIgnore]
         public List<Entrada>? Compras { get; set; }
+
+        [JsonIgnore]
+        public List<ProductoSalida>? ProductoSalidas { get; set; }
     }
 }

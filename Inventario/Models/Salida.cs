@@ -9,7 +9,6 @@ namespace Inventario.Models
     {
         public int Id { get; set; }
 
-        [JsonIgnore]
         public DateTime FechaFactura { get; set; }
 
         public int IdCliente { get; set; }

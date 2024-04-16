@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Inventario.Migrations
 {
     /// <inheritdoc />
-    public partial class Inventario : Migration
+    public partial class InventarioBueno : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -159,6 +159,18 @@ namespace Inventario.Migrations
                 {
                     table.PrimaryKey("PK_ProductoSalidas", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_ProductoSalidas_Categorias_IdCategoria",
+                        column: x => x.IdCategoria,
+                        principalTable: "Categorias",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_ProductoSalidas_Productos_IdProducto",
+                        column: x => x.IdProducto,
+                        principalTable: "Productos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
                         name: "FK_ProductoSalidas_Salidas_IdSalida",
                         column: x => x.IdSalida,
                         principalTable: "Salidas",
@@ -221,9 +233,9 @@ namespace Inventario.Migrations
                 columns: new[] { "Id", "CantidadProductos", "FechaFactura", "IdCliente", "TotalDescuento", "TotalPagarConDescuento", "TotalPagarSinDescuento" },
                 values: new object[,]
                 {
-                    { 1, 2, new DateTime(2024, 4, 15, 22, 27, 0, 0, DateTimeKind.Unspecified), 3, 26000m, 274000m, 300000m },
-                    { 2, 1, new DateTime(2024, 4, 15, 22, 27, 0, 0, DateTimeKind.Unspecified), 1, 190000m, 3610000m, 3800000m },
-                    { 3, 2, new DateTime(2024, 4, 15, 22, 27, 0, 0, DateTimeKind.Unspecified), 2, 7040m, 164960m, 172000m }
+                    { 1, 2, new DateTime(2024, 4, 16, 0, 59, 0, 0, DateTimeKind.Unspecified), 3, 26000m, 274000m, 300000m },
+                    { 2, 1, new DateTime(2024, 4, 16, 0, 59, 0, 0, DateTimeKind.Unspecified), 1, 190000m, 3610000m, 3800000m },
+                    { 3, 2, new DateTime(2024, 4, 16, 0, 59, 0, 0, DateTimeKind.Unspecified), 2, 7040m, 164960m, 172000m }
                 });
 
             migrationBuilder.InsertData(
@@ -231,9 +243,9 @@ namespace Inventario.Migrations
                 columns: new[] { "Id", "ExistenciaActual", "ExistenciaInicial", "FechaEntrada", "IdCategoria", "IdProducto", "IdProveedor", "Nota", "PrecioCompra", "PrecioVenta" },
                 values: new object[,]
                 {
-                    { 1, 30, 50, new DateTime(2024, 4, 15, 22, 27, 6, 174, DateTimeKind.Local).AddTicks(7141), 3, 3, 3, "Yogurt marca colanta sabores fresa y melocoton", 5800m, 8000m },
-                    { 2, 80, 200, new DateTime(2024, 4, 15, 22, 27, 6, 174, DateTimeKind.Local).AddTicks(7186), 5, 7, 1, "La idea es venderlas en maximo un mes", 1800m, 2600m },
-                    { 3, 40, 60, new DateTime(2024, 4, 15, 22, 27, 6, 174, DateTimeKind.Local).AddTicks(7215), 2, 8, 4, "Producto al cual sacarle mucho provecho por su precio de compra y de venta", 50000m, 190000m }
+                    { 1, 30, 50, new DateTime(2024, 4, 16, 0, 59, 24, 194, DateTimeKind.Local).AddTicks(6159), 3, 3, 3, "Yogurt marca colanta sabores fresa y melocoton", 5800m, 8000m },
+                    { 2, 80, 200, new DateTime(2024, 4, 16, 0, 59, 24, 194, DateTimeKind.Local).AddTicks(6233), 5, 7, 1, "La idea es venderlas en maximo un mes", 1800m, 2600m },
+                    { 3, 40, 60, new DateTime(2024, 4, 16, 0, 59, 24, 194, DateTimeKind.Local).AddTicks(6270), 2, 8, 4, "Producto al cual sacarle mucho provecho por su precio de compra y de venta", 50000m, 190000m }
                 });
 
             migrationBuilder.InsertData(
@@ -287,6 +299,16 @@ namespace Inventario.Migrations
                 column: "IdCategoria");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductoSalidas_IdCategoria",
+                table: "ProductoSalidas",
+                column: "IdCategoria");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductoSalidas_IdProducto",
+                table: "ProductoSalidas",
+                column: "IdProducto");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductoSalidas_IdSalida",
                 table: "ProductoSalidas",
                 column: "IdSalida");
@@ -319,10 +341,10 @@ namespace Inventario.Migrations
                 name: "ProductoSalidas");
 
             migrationBuilder.DropTable(
-                name: "Productos");
+                name: "Proveedors");
 
             migrationBuilder.DropTable(
-                name: "Proveedors");
+                name: "Productos");
 
             migrationBuilder.DropTable(
                 name: "Salidas");

@@ -30,5 +30,11 @@ namespace Inventario.Models
 
         [JsonIgnore]
         public Salida? Salida { get; set; }
+
+        [JsonIgnore]
+        public Categoria? Categoria { get; set; }
+
+        [JsonIgnore]
+        public Producto? Producto { get; set; }
     }
 }
