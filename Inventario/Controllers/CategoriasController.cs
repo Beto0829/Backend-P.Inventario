@@ -103,9 +103,9 @@ namespace Inventario.Controllers
         {
             var categoriaEliminar = await _context.Categorias.FindAsync(id);
 
-            if (categoriaEliminar == null)
+            if (categoriaEliminar == null || categoriaEliminar.Id == 1)
             {
-                return NotFound("No existe la categoria que buscas");
+                return NotFound("No existe la categoria que buscas o la categoria que desea eliminar es la predeterminada");
             }
 
             var productosEnCategoria = await _context.Productos
